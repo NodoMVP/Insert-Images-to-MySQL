@@ -8,15 +8,15 @@
 </head>
 <body>
 	<?php
-	$mysqli = new mysqli('localhost', 'root', '', 'images') or die($mysqli->connect_error);
-	$table = 'cats';
-
+$mysqli = new mysqli('remotemysql.com', 'skb8QqIlvb', 'lrLrJLWreC', 'skb8QqIlvb') or die($mysqli->connect_error);
+$table = 'p3_database';
 	$result = $mysqli->query("SELECT * FROM $table") or die($mysqli->error);
 
-	while ($data = result->fetch_assoc()){
+	while ($data = $result->fetch_assoc()){
 		echo "<h2>{$data['name']}</h2>";
 		echo "<img src='{$data['img_dir']}' width='40%' height='40%'>";
 	}
 
 	?>
 </body>
+</html>

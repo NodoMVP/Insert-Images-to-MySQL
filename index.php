@@ -15,8 +15,8 @@
 
 <?php
 
-$mysqli = new mysqli('localhost', 'root', '', 'images') or die($mysqli->connect_error);
-$table = 'cats';
+$mysqli = new mysqli('remotemysql.com', 'skb8QqIlvb', 'lrLrJLWreC', 'skb8QqIlvb') or die($mysqli->connect_error);
+$table = 'p3_database';
 
 $phpFileUploadErrors = array(
 	0 => 'There is no error, the file uploaded with success',
@@ -30,6 +30,20 @@ $phpFileUploadErrors = array(
 );
 
 //$_$FILES global variable
+function reArrayFiles(&$file_post) {
+
+	$file_ary = array();
+	$file_count = count($file_post['name']);
+	$file_keys = array_keys($file_post);
+
+	for ($i=0; $i<$file_count; $i++) {
+		foreach ($file_keys as $key) {
+			$file_ary[$i][$key] = $file_post[$key][$i];
+		}
+	}
+
+	return $file_ary;
+}
 if (isset($_FILES['userfile'])){
 	$file_array = reArrayFiles($_FILES['userfile']);
 	//pre_r($file_array);
@@ -46,7 +60,8 @@ if (isset($_FILES['userfile'])){
 
 		$file_ext = explode('.', $file_array[$i]['name']);
 
-		$neme = $file_ext[0];
+		$name = $file_ext[0];
+		
 		$name = preg_replace("!-!", " ", $name);
 		$name = ucwords($name);
 
@@ -67,31 +82,23 @@ if (isset($_FILES['userfile'])){
 			$sql = "INSERT IGNORE INTO $table (name,img_dir) VALUES('$name','$img_dir')";
 			$mysqli->query($sql) or die($mysqli->error);
 
+			header("Location: display.php");
+
 			?> <div class="alert alert-success">
-			<?php echo $file_array[$i]['neme'].' - '.$phpFileUploadErrors[$file_array[$i]['error']];	
+			<?php echo $file_array[$i]['name'].' - '.$phpFileUploadErrors[$file_array[$i]['error']];	
+
 			?> </div> <?php
 		}		
 	}
 }
 
-function reArrayFiles(&$file_post) {
 
-	$file_ary = array();
-	$file_count = count($file_post['neme']);
-	$file_keys = array_keys($file_post);
-
-	for ($i=0; $i<$file_count; $i++) {
-		foreach ($file_keys as $key) {
-			$file_ary[$i][$key] = $file_post[$key][$i];
-		}
-	}
-
-	return $file_ary;
-}
 
 function pre_r($array){
 	echo '<pre>';
 	print_r($array);
 	echo '</pre>';
 }
+}
+?>
 </html>
